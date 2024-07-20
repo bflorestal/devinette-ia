@@ -1,0 +1,49 @@
+services:
+  web:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    depends_on:
+      - api
+    networks:
+      - DMZ1
+  api:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    ports:
+      - "5000:5000"
+    depends_on:
+      - db
+    networks:
+      - DMZ1
+      - DMZ2
+  jupyter-notebook:
+    image:
+    ports:
+      - "8888:8888"
+    volumes:
+      - ./notebooks:/home/jovyan/work
+    depends_on:
+      - db
+    networks:
+      - DMZ2
+  db:
+    image: postgres:16
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    volumes:
+      - ./data:/var/lib/postgresql/data
+    restart: always
+    networks:
+      - DMZ2
+
+networks:
+  DMZ1:
+  DMZ2:
