@@ -68,7 +68,6 @@ dist/
 downloads/
 eggs/
 .eggs/
-lib/
 lib64/
 parts/
 sdist/
@@ -240,7 +239,6 @@ pyrightconfig.json
 .pydevproject
 .scala_dependencies
 .settings
-/lib/
 R-unit-tests.log
 R/unit-tests.out
 R/cran-check.out
