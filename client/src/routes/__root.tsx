@@ -15,7 +15,7 @@ export const Route = createRootRoute({
         <div className="ml-auto flex gap-4 sm:gap-6 items-center">
           <nav className="flex gap-4 sm:gap-6">
             <Link
-              to="#"
+              to="/stats"
               className="text-sm font-medium hover:underline underline-offset-4"
             >
               Statistiques
