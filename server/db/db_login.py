@@ -29,7 +29,7 @@ def get_all_users() -> list[User]:
     """Récupère tous les utilisateurs de la base de données."""
     with Db_connector() as dbc:
         result = dbc.selectAll("users")
-    return [User(user) for user in result]
+    return [User(user).to_dict() for user in result]
 
 def add_user(username: str):
     """Ajoute un utilisateur à la base de données.
