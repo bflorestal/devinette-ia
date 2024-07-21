@@ -1,14 +1,14 @@
 services:
-  web:
-    build:
-      context: ./client
-      dockerfile: Dockerfile
-    ports:
-      - "3000:3000"
-    depends_on:
-      - api
-    networks:
-      - DMZ1
+  # web:
+  #   build:
+  #     context: ./client
+  #     dockerfile: Dockerfile
+  #   ports:
+  #     - "3000:3000"
+  #   depends_on:
+  #     - api
+  #   networks:
+  #     - DMZ1
   api:
     build:
       context: ./server
@@ -21,7 +21,7 @@ services:
       - DMZ1
       - DMZ2
   jupyter-notebook:
-    image:
+    image: jupyter/datascience-notebook
     ports:
       - "8888:8888"
     volumes:
