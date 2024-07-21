@@ -38,7 +38,8 @@ def add_user(username: str):
         username (str): Nom d'utilisateur de l'utilisateur.
     """
     with Db_connector() as dbc:
-        dbc.insert("users", {"username": username})
+        result = dbc.insert("users", {"username": username})
+    return result
 
 def update_user(user: User):
     """Met à jour un utilisateur dans la base de données.

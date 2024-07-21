@@ -48,7 +48,9 @@ class Db_connector:
     def insert(self, collection_name: str, document: dict):
         try:
             collection = self.db[collection_name]
-            collection.insert_one(document)
+            result = collection.insert_one(document)
+
+            return str(result.inserted_id)
         except Exception as err:
             print(err)
             sys.exit()
