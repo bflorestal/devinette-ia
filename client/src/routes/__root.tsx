@@ -1,6 +1,7 @@
 import { createRootRoute, Link, Outlet } from "@tanstack/react-router";
-// import { TanStackRouterDevtools } from "@tanstack/router-devtools";
+import { TanStackRouterDevtools } from "@tanstack/router-devtools";
 import { ModeToggle } from "@/components/mode-toggle";
+import { Toaster } from "@/components/ui/sonner";
 import GitHubIcon from "@/components/icons/github";
 import GamepadIcon from "@/components/icons/gamepad";
 
@@ -46,7 +47,8 @@ export const Route = createRootRoute({
           </a>
         </nav>
       </footer>
-      {/* <TanStackRouterDevtools /> */}
+      <Toaster richColors />
+      <TanStackRouterDevtools />
     </>
   ),
 });
