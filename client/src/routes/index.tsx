@@ -37,18 +37,18 @@ function Index() {
               </div>
             </div>
             <img
-              src="/placeholder.svg"
+              src="/company-playing-word-guessing-game-sitting.webp"
               width="550"
               height="550"
               alt="Hero"
-              className="mx-auto aspect-video overflow-hidden rounded-xl object-cover sm:w-full lg:order-last lg:aspect-square"
+              className="mx-auto rounded-xl sm:w-full lg:order-last"
             />
           </div>
         </div>
       </section>
       <section
         id="features"
-        className="w-full py-12 md:py-24 lg:py-32 bg-muted"
+        className="w-full bg-muted py-12 md:py-24 lg:py-32"
       >
         <div className="container px-4 md:px-6">
           <div className="flex flex-col items-center justify-center space-y-4 text-center">
@@ -70,7 +70,7 @@ function Index() {
           </div>
           <div className="mx-auto grid max-w-5xl items-center gap-6 py-12 lg:grid-cols-2 lg:gap-12">
             <img
-              src="/placeholder.svg"
+              src="/artificial-intelligence-vs-human.webp"
               width="550"
               height="310"
               alt="Adversaire IA"
@@ -119,7 +119,7 @@ function Index() {
                 un aperçu du gameplay excitant et de l'adversaire IA.
               </p>
             </div>
-            <div className="aspect-video w-full max-w-4xl rounded-xl overflow-hidden">
+            <div className="aspect-video w-full max-w-4xl overflow-hidden rounded-xl">
               {/*
               <iframe
                 src="https://www.youtube.com/embed/dQw4w9WgXcQ"
