@@ -12,7 +12,7 @@ from routes.user_routes import user_bp
 
 # IA
 model = load_model("ai_models/animal_classifier_model_224x.h5")
-class_names = ["butterfly", "cat", "chicken", "cow", "dog", "elephant", "horse", "sheep", "spider", "squirrel"]
+class_names = ["papillon", "chat", "poule", "vache", "chien", "éléphant", "cheval", "mouton", "araignée", "écureuil"]
 IMG_SIZE = 224
 
 app = Flask(__name__)
