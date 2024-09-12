@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
+import { useQuery } from "@tanstack/react-query";
 
 /*
 async function sendGuess(text: string) {
@@ -86,16 +87,20 @@ function getRandomImage() {
 }
 
 export default function Guess() {
-  const [imageURL, setImageURL] = useState<string>(() => getRandomImage());
   const [aiGuess, setAiGuess] = useState("");
   const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
   const [isPlayerTurn, setIsPlayerTurn] = useState(true);
 
-  /*
-  useEffect(() => {
-    // getRandomImage();
-  }, []);
-  */
+  const {
+    data: imageURL,
+    isLoading,
+    isError,
+    refetch,
+  } = useQuery({
+    queryKey: ["animal-image"],
+    queryFn: getRandomImage,
+    refetchOnWindowFocus: false,
+  });
 
   const form = useForm<FormSchema>({
     resolver: zodResolver(formSchema),
@@ -148,12 +153,10 @@ export default function Guess() {
           </span>
         </div>
         <div className="rounded-md">
-          <img
-            src={imageURL ?? "/placeholder.svg"}
-            alt="Image à deviner"
-            width={224}
-            height={224}
-            className="mx-auto object-cover"
+          <AnimalImage
+            isLoading={isLoading}
+            isError={isError}
+            imageURL={imageURL}
           />
         </div>
         <div className="flex items-center gap-2">
@@ -174,13 +177,14 @@ export default function Guess() {
                         minLength={3}
                         pattern="[a-zA-Z]+"
                         required
+                        disabled={isLoading || isError}
                         {...field}
                       />
                     </FormControl>
                   </FormItem>
                 )}
               />
-              <Button type="submit" disabled={!isPlayerTurn}>
+              <Button type="submit" disabled={!isPlayerTurn || !imageURL}>
                 Deviner
               </Button>
             </form>
@@ -205,7 +209,7 @@ export default function Guess() {
           <Button
             variant="outline"
             onClick={() => {
-              setImageURL(getRandomImage());
+              refetch();
               setAiGuess("");
               setIsCorrect(null);
               setIsPlayerTurn(true);
@@ -217,4 +221,36 @@ export default function Guess() {
       </div>
     </div>
   );
+}
+
+interface AnimalImageProps {
+  isLoading: boolean;
+  isError: boolean;
+  imageURL: string | undefined;
+}
+
+function AnimalImage({ isLoading, isError, imageURL }: AnimalImageProps) {
+  if (isLoading)
+    return (
+      <img
+        src="/placeholder.svg"
+        alt="Image à deviner"
+        width={224}
+        height={224}
+        className="mx-auto object-cover"
+      />
+    );
+
+  if (isError) return <p>Erreur lors du chargement de l'image</p>;
+
+  if (imageURL)
+    return (
+      <img
+        src={imageURL}
+        alt="Image à deviner"
+        width={224}
+        height={224}
+        className="mx-auto object-cover"
+      />
+    );
 }
