@@ -8,34 +8,6 @@ import { useForm } from "react-hook-form";
 import { useQuery } from "@tanstack/react-query";
 import { useLocalStorage } from "usehooks-ts";
 
-/*
-async function sendGuess(text: string) {
-  // Call the API to check if the player's guess is correct
-  // If correct, set isCorrect to true
-  // If incorrect, set isCorrect to false
-
-  try {
-    const res = await fetch(`${import.meta.env.VITE_API_URL}/guess`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ text }),
-    });
-
-    if (!res.ok) {
-      throw new Error("Something went wrong");
-    }
-
-    const data = await res.json();
-
-    return data;
-  } catch (error) {
-    console.error(error);
-  }
-};
-*/
-
 const formSchema = z.object({
   playerGuess: z.string().min(3, {
     message: "Veuillez entrer une réponse",
