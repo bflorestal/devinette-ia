@@ -120,15 +120,13 @@ function Index() {
               </p>
             </div>
             <div className="aspect-video w-full max-w-4xl overflow-hidden rounded-xl">
-              {/*
               <iframe
-                src="https://www.youtube.com/embed/dQw4w9WgXcQ"
+                src="/game_recording.webm"
                 title="Démo du jeu"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                 allowFullScreen
-                className="w-full h-full"
+                className="h-full w-full"
               />
-              */}
             </div>
           </div>
         </div>
