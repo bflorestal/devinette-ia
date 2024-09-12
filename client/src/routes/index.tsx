@@ -62,9 +62,9 @@ function Index() {
               <p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
                 Ce jeu offre une expérience unique et captivante, vous opposant
                 à un adversaire IA redoutable dans une bataille d'intelligence
-                et de maîtrise des mots. Découvrez les fonctionnalités clés du
-                jeu et comprenez pourquoi il s'agit du défi ultime de devinettes
-                de mots.
+                et de maîtrise des animaux. Découvrez les fonctionnalités clés
+                du jeu et comprenez pourquoi il s'agit du défi ultime de
+                devinettes d'animaux.
               </p>
             </div>
           </div>
@@ -81,7 +81,7 @@ function Index() {
                 <h3 className="text-xl font-bold">Une IA redoutable</h3>
                 <p className="text-muted-foreground">
                   Affrontez une IA très intelligente qui s'adapte à votre style
-                  de jeu et vous défie avec une large gamme de mots.
+                  de jeu et vous défie avec une large gamme d'animaux.
                 </p>
               </div>
               <div className="grid gap-1">
