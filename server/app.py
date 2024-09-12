@@ -9,6 +9,7 @@ import os
 import io
 
 from routes.user_routes import user_bp
+from routes.game_routes import game_bp
 
 # IA
 model = load_model("ai_models/animal_classifier_model_224x.h5")
@@ -60,6 +61,7 @@ def predict():
 
 # Autres routes
 app.register_blueprint(user_bp)
+app.register_blueprint(game_bp)
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0")

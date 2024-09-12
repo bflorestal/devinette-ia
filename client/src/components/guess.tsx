@@ -35,27 +35,6 @@ async function sendGuess(text: string) {
 };
 */
 
-/*
-async function getAiGuess() {
-  // Call the API to get the AI's guess
-  // Return the AI's guess
-
-  try {
-    const res = await fetch(`${import.meta.env.VITE_API_URL}/guess`);
-
-    if (!res.ok) {
-      throw new Error("Something went wrong");
-    }
-
-    const data = await res.json();
-
-    return data;
-  } catch (error) {
-    console.error(error);
-  }
-}
-*/
-
 const formSchema = z.object({
   playerGuess: z.string().min(3, {
     message: "Veuillez entrer une réponse",
@@ -84,6 +63,55 @@ function getRandomImage() {
   const validatedRandImg = z.object({ default: z.string() }).parse(randomImage);
 
   return validatedRandImg.default;
+}
+
+/** Extract the image name from the URL.
+ * @param url - The URL of the image.
+ * @returns The name of the image.
+ */
+function extractImageName(url: string | undefined): string {
+  return url?.split("/").pop() || "animal-image.jpg";
+}
+
+/**
+ * Send the data of the game to the API.
+ * @param imageFile The name of the image file.
+ * @param playerGuess The animal guessed by the player.
+ * @param aiGuess The animal guessed by the AI.
+ *
+ * @example
+ * sendGameData("animal-image.jpg", "cat", "dog");
+ */
+async function sendGameData(
+  imageFile: string,
+  playerGuess: string,
+  aiGuess: string,
+) {
+  try {
+    await fetch(`${import.meta.env.VITE_API_URL}/games`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        image_file: imageFile,
+        user: {
+          id: "669d2f4d6906358cdf29b633",
+          guess: playerGuess,
+        },
+        model: {
+          id: "66e32b4927e3fad8473fb1ba",
+          guess: aiGuess,
+        },
+        correct_answer: aiGuess,
+      }),
+    });
+  } catch (error) {
+    console.error(
+      "Erreur lors de l'envoi des données de la partie à l'API :",
+      error,
+    );
+  }
 }
 
 export default function Guess() {
@@ -119,7 +147,7 @@ export default function Guess() {
       const response = await fetch(imageURL);
       const blob = await response.blob();
 
-      formData.append("file", blob, "animal-image.jpg");
+      formData.append("file", blob, imageURL.split("/").pop());
 
       const predictionResponse = await fetch(
         `${import.meta.env.VITE_API_URL}/predict`,
@@ -136,6 +164,12 @@ export default function Guess() {
       const predictionData = await predictionResponse.json();
       setAiGuess(predictionData.prediction);
       setIsCorrect(guess === predictionData.prediction);
+
+      await sendGameData(
+        extractImageName(imageURL),
+        guess,
+        predictionData.prediction,
+      );
 
       form.reset();
     } catch (error) {
