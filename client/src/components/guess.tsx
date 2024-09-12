@@ -23,19 +23,25 @@ type FormSchema = z.infer<typeof formSchema>;
  * console.log(randomImage); // "/assets/random-image.jpg"
  */
 function getRandomImage() {
-  const images = import.meta.glob("../assets/*.jpg", {
+  const images = import.meta.glob("../assets/**/*.jpg", {
     eager: true,
   });
 
   const imageKeys = Object.keys(images);
+
+  // Get a random image
   const randomImageKey =
     imageKeys[Math.floor(Math.random() * imageKeys.length)];
+  const folderName = randomImageKey.split("/")[2]; // Extract folder name from the random image
 
   const randomImage: unknown = images[randomImageKey];
-
   const validatedRandImg = z.object({ default: z.string() }).parse(randomImage);
 
-  return validatedRandImg.default;
+  // Return both the folder name and the image URL
+  return {
+    folder: folderName,
+    image: validatedRandImg.default,
+  };
 }
 
 /** Extract the image name from the URL.
@@ -59,6 +65,7 @@ async function sendGameData(
   imageFile: string,
   user: { id: string; guess: string },
   aiGuess: string,
+  correctAnswer: string,
 ) {
   try {
     await fetch(`${import.meta.env.VITE_API_URL}/games`, {
@@ -76,7 +83,7 @@ async function sendGameData(
           id: "66e32b4927e3fad8473fb1ba",
           guess: aiGuess,
         },
-        correct_answer: aiGuess,
+        correct_answer: correctAnswer,
       }),
     });
   } catch (error) {
@@ -101,7 +108,7 @@ export default function Guess() {
   }, [userId, setUserId]);
 
   const {
-    data: imageURL,
+    data: imageData,
     isLoading,
     isError,
     refetch,
@@ -120,15 +127,15 @@ export default function Guess() {
 
   async function onSubmit(values: FormSchema) {
     const guess = values.playerGuess.trim().toLowerCase();
-    if (!guess || guess.length === 0 || !imageURL) return;
+    if (!guess || guess.length === 0 || !imageData) return;
     setIsPlayerTurn(false);
 
     try {
       const formData = new FormData();
-      const response = await fetch(imageURL);
+      const response = await fetch(imageData.image);
       const blob = await response.blob();
 
-      formData.append("file", blob, imageURL.split("/").pop());
+      formData.append("file", blob, imageData.image.split("/").pop());
 
       const predictionResponse = await fetch(
         `${import.meta.env.VITE_API_URL}/predict`,
@@ -144,12 +151,13 @@ export default function Guess() {
 
       const predictionData = await predictionResponse.json();
       setAiGuess(predictionData.prediction);
-      setIsCorrect(guess === predictionData.prediction);
+      setIsCorrect(guess === imageData.folder);
 
       await sendGameData(
-        extractImageName(imageURL),
+        extractImageName(imageData.image),
         { id: userId, guess },
         predictionData.prediction,
+        imageData.folder,
       );
 
       form.reset();
@@ -171,7 +179,7 @@ export default function Guess() {
           <AnimalImage
             isLoading={isLoading}
             isError={isError}
-            imageURL={imageURL}
+            imageURL={imageData?.image}
           />
         </div>
         <div className="flex items-center gap-2">
@@ -199,25 +207,25 @@ export default function Guess() {
                   </FormItem>
                 )}
               />
-              <Button type="submit" disabled={!isPlayerTurn || !imageURL}>
+              <Button
+                type="submit"
+                disabled={!isPlayerTurn || !imageData?.image}
+              >
                 Deviner
               </Button>
             </form>
           </Form>
         </div>
-        <div
-          className={`h-6 text-center ${isCorrect ? "text-green-500" : "text-red-500"}`}
-        >
+        <div className="h-6 text-center">
           {aiGuess ? (
-            isCorrect ? (
-              <p>
-                <strong>Correct !</strong> L'IA a aussi donné la bonne réponse.
-              </p>
-            ) : (
-              <p>
-                <strong>Faux !</strong> Réponse de l'IA : {aiGuess}
-              </p>
-            )
+            <p>
+              <strong
+                className={`${isCorrect ? "text-green-500" : "text-red-500"}`}
+              >
+                {isCorrect ? "Correct !" : "Faux !"}
+              </strong>{" "}
+              Réponse de l'IA : {aiGuess}
+            </p>
           ) : null}
         </div>
         <div className="flex items-center justify-end">
