@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
@@ -6,6 +6,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useQuery } from "@tanstack/react-query";
+import { useLocalStorage } from "usehooks-ts";
 
 /*
 async function sendGuess(text: string) {
@@ -84,7 +85,7 @@ function extractImageName(url: string | undefined): string {
  */
 async function sendGameData(
   imageFile: string,
-  playerGuess: string,
+  user: { id: string; guess: string },
   aiGuess: string,
 ) {
   try {
@@ -96,8 +97,8 @@ async function sendGameData(
       body: JSON.stringify({
         image_file: imageFile,
         user: {
-          id: "669d2f4d6906358cdf29b633",
-          guess: playerGuess,
+          id: user.id,
+          guess: user.guess,
         },
         model: {
           id: "66e32b4927e3fad8473fb1ba",
@@ -118,6 +119,14 @@ export default function Guess() {
   const [aiGuess, setAiGuess] = useState("");
   const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
   const [isPlayerTurn, setIsPlayerTurn] = useState(true);
+  const [userId, setUserId] = useLocalStorage("userId", "");
+
+  useEffect(() => {
+    if (!userId || userId.length === 0) {
+      const newUserId = Math.random().toString(36).substring(2, 15);
+      setUserId(newUserId);
+    }
+  }, [userId, setUserId]);
 
   const {
     data: imageURL,
@@ -167,7 +176,7 @@ export default function Guess() {
 
       await sendGameData(
         extractImageName(imageURL),
-        guess,
+        { id: userId, guess },
         predictionData.prediction,
       );
 
